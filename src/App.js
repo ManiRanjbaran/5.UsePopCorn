@@ -53,28 +53,33 @@ const average = (arr) =>
 
 export default function App() {
   const [movies, setMovies] = useState(tempMovieData);
+  const [watched, setWatched] = useState(tempWatchedData);
 
   return (
-    <React.Fragment>
-      <NavBar movies={movies} />
-      <main className="main">
-        <MovieBox movies={movies} />
-        <WatchedBox />
-      </main>
-    </React.Fragment>
+    <div>
+      <NavBar movies={movies}>
+        <Logo /> <Search /> <NumResults movies={movies} />
+      </NavBar>
+
+      <Main>
+        <Box>
+          <MovieList movies={movies} />
+        </Box>
+
+        <Box>
+          <Summary watched={watched} /> <WatchedList watched={watched} />{" "}
+        </Box>
+      </Main>
+    </div>
   );
 }
 
-function NavBar({ movies }) {
-  return (
-    <React.Fragment>
-      <nav className="nav-bar">
-        <Logo />
-        <Search />
-        <NumResults movies={movies} />
-      </nav>
-    </React.Fragment>
-  );
+function NavBar({ children }) {
+  return <nav className="nav-bar">{children}</nav>;
+}
+
+function Main({ children }) {
+  return <main className="main">{children}</main>;
 }
 
 function Logo() {
@@ -107,13 +112,13 @@ function NumResults({ movies }) {
   );
 }
 
-function MovieBox({ movies }) {
-  const [isOpen1, setIsOpen1] = useState(true);
+function Box({ children }) {
+  const [isOpen, setIsOpen] = useState(true);
 
   return (
     <div className="box">
-      <ButtonToggle isOpen={isOpen1} setIsOpen={setIsOpen1} />
-      {isOpen1 && <List movies={movies} />}
+      <ButtonToggle isOpen={isOpen} setIsOpen={setIsOpen} />
+      {isOpen && children}
     </div>
   );
 }
@@ -128,7 +133,7 @@ function ButtonToggle({ isOpen, setIsOpen }) {
   );
 }
 
-function List({ movies }) {
+function MovieList({ movies }) {
   return (
     <ul className="list">
       {movies?.map((movie) => (
@@ -144,23 +149,6 @@ function List({ movies }) {
         </li>
       ))}
     </ul>
-  );
-}
-
-function WatchedBox() {
-  const [isOpen2, setIsOpen2] = useState(true);
-  const [watched, setWatched] = useState(tempWatchedData);
-
-  return (
-    <div className="box">
-      <ButtonToggle isOpen={isOpen2} setIsOpen={setIsOpen2} />
-      {isOpen2 && (
-        <>
-          <Summary watched={watched} />
-          <WatchedList watched={watched} />
-        </>
-      )}
-    </div>
   );
 }
 
