@@ -97,6 +97,7 @@ export default function App() {
               selectedId={selectedId}
               onCloseMovie={handleCloseMovie}
               onAddWatched={handleAddWatched}
+              watched={watched}
             />
           ) : (
             <>
@@ -109,10 +110,15 @@ export default function App() {
   );
 }
 
-function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
+function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [userRating, setUserRating] = useState(0);
+
+  const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
+  const userWatchedRate = watched.find(
+    (movie) => movie.imdbID === selectedId
+  )?.userRating;
 
   const {
     Title: title,
@@ -136,6 +142,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
       imdbRating: Number(imdbRating),
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
+      watched,
     };
 
     onAddWatched(newMovie);
@@ -182,12 +189,21 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched }) {
           </header>
 
           <div className="rating">
-            <StarRating size={30} onSetRating={setUserRating} />
+            {!isWatched ? (
+              <div>
+                <StarRating size={30} onSetRating={setUserRating} />
 
-            {userRating > 0 && (
-              <button className="btn-add" onClick={handleAdd}>
-                + Add Movie
-              </button>
+                {userRating > 0 && (
+                  <button className="btn-add" onClick={handleAdd}>
+                    + Add Movie
+                  </button>
+                )}
+              </div>
+            ) : (
+              <p>
+                You've already rated this movie {userWatchedRate}
+                <span>⭐</span>
+              </p>
             )}
           </div>
 
@@ -228,7 +244,7 @@ function Logo() {
   return (
     <div className="logo">
       <span role="img">🍿</span>
-      <h1>usePopcorn</h1>
+      <h1>ManiMovies</h1>
     </div>
   );
 }
