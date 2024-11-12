@@ -27,19 +27,9 @@ export default function App() {
     setWatched((watched) => [...watched, movie]);
   }
 
-  // useEffect(() => {
-  //   console.log("After initial render (mount)");
-  // }, []);
-
-  // useEffect(() => {
-  //   console.log("After every render");
-  // });
-
-  // console.log("During render");
-
-  // useEffect(() => {
-  //   console.log("After changing query state");
-  // }, [query]);
+  function handleRemoveMovie(id) {
+    setWatched((watched) => watched.filter((movie) => id !== movie.imdbID));
+  }
 
   useEffect(() => {
     async function fetchMovies() {
@@ -101,7 +91,11 @@ export default function App() {
             />
           ) : (
             <>
-              <Summary watched={watched} /> <WatchedList watched={watched} />{" "}
+              <Summary watched={watched} />{" "}
+              <WatchedList
+                watched={watched}
+                onRemoveMovie={handleRemoveMovie}
+              />
             </>
           )}
         </Box>
@@ -324,11 +318,11 @@ function Summary({ watched }) {
         </p>
         <p>
           <span>⭐️</span>
-          <span>{avgImdbRating}</span>
+          <span>{avgImdbRating.toFixed(2)}</span>
         </p>
         <p>
           <span>🌟</span>
-          <span>{avgUserRating}</span>
+          <span>{avgUserRating.toFixed(2)}</span>
         </p>
         <p>
           <span>⏳</span>
@@ -339,7 +333,7 @@ function Summary({ watched }) {
   );
 }
 
-function WatchedList({ watched }) {
+function WatchedList({ watched, onRemoveMovie }) {
   return (
     <ul className="list">
       {watched.map((movie) => (
@@ -359,6 +353,13 @@ function WatchedList({ watched }) {
               <span>⏳</span>
               <span>{movie.runtime} min</span>
             </p>
+
+            <button
+              className="btn-delete"
+              onClick={() => onRemoveMovie(movie.imdbID)}
+            >
+              X
+            </button>
           </div>
         </li>
       ))}
