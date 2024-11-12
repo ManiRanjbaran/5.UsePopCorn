@@ -44,10 +44,11 @@ export default function App() {
             `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
             { signal: controller.signal }
           );
-          const data = await res.json();
 
           if (!res.ok)
             throw new Error("Something went wrong with fetching Movies...");
+
+          const data = await res.json();
 
           if (data.Response === "False") throw new Error("Movie not Found.");
 
@@ -68,6 +69,7 @@ export default function App() {
         return;
       }
 
+      handleCloseMovie();
       fetchMovies();
 
       return function () {
