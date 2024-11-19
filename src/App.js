@@ -36,6 +36,10 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => id !== movie.imdbID));
   }
 
+  useEffect(() => {
+    localStorage.setItem("watched", JSON.stringify(watched));
+  }, [watched]);
+
   useEffect(
     function () {
       const controller = new AbortController();
