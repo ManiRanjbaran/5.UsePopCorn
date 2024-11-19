@@ -25,9 +25,12 @@ export default function App() {
 
   function handleAddWatched(movie) {
     setWatched((watched) => [...watched, movie]);
-
-    // localStorage.setItem(JSON.stringify("watched", [...watched, movie]));
   }
+
+  // localStorage.setItem(JSON.stringify("watched", [...watched, movie])); ==> if we want to store the movies
+  // >>> We should add the [...watched,movie] so that everytime that we re-render, it'll be rendered again
+  // HOWEVER, we could use useEffect hook and give it the dependency array of [watched] so that
+  // it'll automatically re-render everytime that watched state hook is changed...
 
   function handleRemoveMovie(id) {
     setWatched((watched) => watched.filter((movie) => id !== movie.imdbID));
