@@ -4,6 +4,8 @@ import StarRating from "./StarRating";
 import { useMovie } from "./useMovie";
 import { useLocalStorageState } from "./useLocalStorageState";
 
+const KEY = "f84fc31d";
+
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
 
@@ -35,9 +37,9 @@ export default function App() {
     setWatched((watched) => watched.filter((movie) => id !== movie.imdbID));
   }
 
-  useEffect(() => {
-    localStorage.setItem("watched", JSON.stringify(watched));
-  }, [watched]);
+  // useEffect(() => {
+  //   localStorage.setItem("watched", JSON.stringify(watched));
+  // }, [watched]);
 
   return (
     <div>
@@ -77,8 +79,6 @@ export default function App() {
     </div>
   );
 }
-
-const KEY = "f84fc31d";
 
 function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
   const [movie, setMovie] = useState({});
