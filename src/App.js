@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarRating from "./StarRating";
 
 const average = (arr) =>
@@ -58,17 +58,17 @@ export default function App() {
             throw new Error("Something went wrong with fetching Movies...");
 
           const data = await res.json();
-
           if (data.Response === "False") throw new Error("Movie not Found.");
 
           setMovies(data.Search);
+          setError("");
         } catch (err) {
           if (err.name !== "AbortError") {
+            console.log(err.message);
             setError(err.message);
           }
         } finally {
           setIsLoading(false);
-          setError("");
         }
       }
 
@@ -296,6 +296,12 @@ function Logo() {
 }
 
 function Search({ query, setQuery }) {
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    inputEl.current.focus();
+  }, []);
+
   return (
     <input
       className="search"
@@ -303,6 +309,7 @@ function Search({ query, setQuery }) {
       placeholder="Search movies..."
       value={query}
       onChange={(e) => setQuery(e.target.value)}
+      ref={inputEl}
     />
   );
 }
