@@ -137,6 +137,12 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
     (movie) => movie.imdbID === selectedId
   )?.userRating;
 
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    if (userRating) countRef.current++;
+  }, [userRating]);
+
   const {
     Title: title,
     Year: year,
@@ -160,6 +166,7 @@ function MovieDetails({ selectedId, onCloseMovie, onAddWatched, watched }) {
       runtime: Number(runtime.split(" ").at(0)),
       userRating,
       watched,
+      countRatingDesicions: countRef,
     };
 
     onAddWatched(newMovie);
@@ -299,7 +306,15 @@ function Search({ query, setQuery }) {
   const inputEl = useRef(null);
 
   useEffect(() => {
-    inputEl.current.focus();
+    function callback(e) {
+      if (document.activeElement === inputEl.current) return;
+
+      if (e.code === "Enter") {
+        inputEl.current.focus();
+      }
+    }
+
+    document.addEventListener("keydown", callback);
   }, []);
 
   return (
